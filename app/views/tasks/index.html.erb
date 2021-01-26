@@ -3,7 +3,6 @@
 <ul>
   <% @tasks.each do |task| %>
     <li><%= link_to task.id,task %> : <%= task.content %></li>
-  <% end %>>
+  <% end %>
 </ul>
-
 <%= link_to '新規タスクの登録', new_task_path %>
