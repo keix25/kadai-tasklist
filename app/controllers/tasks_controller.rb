@@ -1,10 +1,13 @@
 class TasksController < ApplicationController
+  #before_action :authenticate_user!
   before_action :set_task, only: [:show, :edit, :update, :destroy]
+  
     def index
-      @tasks = Task.all
+      @tasks = Task.all.page(params[:page]).per(10)
     end
-#11
+
   def show
+      @task = Task.find(params[:id])
   end
 
   def new
@@ -12,8 +15,8 @@ class TasksController < ApplicationController
   end
 
   def create
-      @task  = Task.new(task_params)
-      
+      #@task  = Task.new(task_params)
+      @task = current_user.tasks.build(task_params)
       if @task.save
         flash[:success] = 'タスクが正常に登録されました'
         redirect_to @task
@@ -27,6 +30,7 @@ class TasksController < ApplicationController
   end
 
   def update
+     @task = current_user.tasks.find(params[:id])
       if @task.update(task_params)
       flash[:success] = 'タスクが正常に更新されました'
         redirect_to @task
