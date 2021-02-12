@@ -1,9 +1,11 @@
 class SessionsController < ApplicationController
+  before_action :require_user_logged_in, only: [:index, :show]
+  
   def new
   end
 
   def create
-     email = params[:session][:email].downcase
+    email = params[:session][:email].downcase
     password = params[:session][:password]
     if login(email, password)
       flash[:success] = 'ログインに成功しました。'

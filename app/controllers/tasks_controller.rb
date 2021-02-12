@@ -1,10 +1,12 @@
 class TasksController < ApplicationController
-  #before_action :authenticate_user!
+  before_action :require_user_logged_in
   before_action :set_task, only: [:show, :edit, :update, :destroy]
+ 
   
-    def index
-      @tasks = Task.all.page(params[:page]).per(10)
-    end
+  def index
+    @task = current_user.tasks.build  # form_with 用
+    @tasks = current_user.tasks.order(id: :desc).page(params[:page])
+  end
 
   def show
       @task = Task.find(params[:id])
@@ -48,8 +50,12 @@ class TasksController < ApplicationController
   end
   
   private
+  
   def set_task
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find_by(id: params[:id])
+    if !@task
+      redirect_to root_path
+    end
   end
 
 # Strong Parameter
